@@ -22,9 +22,9 @@ public class Depozit {
 	WebElement elem  = null;
 	this.wait = wait;	
 	this.r = robot;
-	
+	boolean isBot=false;
 		
-		Thread.sleep(50000);//60 sec test
+		Thread.sleep(40000);//60 sec test
 		try {
 			
 			//boolean isPresent = driver.findElements(By.xpath("//div[@id='interface-chat']/div/div[2]/div/div[10]/div[2]/div/div[10]")).size() > 0;
@@ -45,8 +45,17 @@ public class Depozit {
 			is = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='tooltip-map-resource-deposit']/div/div[11]/div/a"))).isDisplayed();
 		if(is) {
 			elem= driver.findElement(By.xpath("//div[@id='tooltip-map-resource-deposit']/div/div[11]/div/a"));
-		
-		 elem.click();
+
+         
+               /* try {
+                    ((JavascriptExecutor) driver).executeScript(
+                            "arguments[0].scrollIntoView(true);", elem);
+                } catch (Exception e) {
+                		e.printStackTrace();
+                }*/
+            Thread.sleep(500);			
+JavascriptExecutor ex = (JavascriptExecutor)driver;
+ex.executeScript("arguments[0].click();", elem);
 		}
 		}finally {
 			if(!is)
@@ -65,29 +74,46 @@ public class Depozit {
 	 WebElement start = null;
 	 if(dr.toUpperCase().contains("CHRO"))
 	 {
-		boolean adu= !driver.findElements(By.xpath("//a[contains(text(),'Adună')]")).isEmpty();
+		boolean adu = driver.findElements(By.xpath("//a[contains(text(),'Adună')]")).size()>0;
 		if(adu) {
 			if(driver.findElements(By.xpath("//a[contains(text(),'Adună')]")).get(0).isDisplayed()) {
+			System.out.println("Aduna available!");
+			  WebElement ee = driver.findElement(By.xpath("//a[contains(text(),'Adună')]"));
+				((JavascriptExecutor) driver).executeScript("arguments[0].click()",ee);
+		}
+			/*if(driver.findElements(By.xpath("//a[contains(text(),'Adună')]")).get(0).isDisplayed()) {
 		WebElement e=	driver.findElement(By.xpath("//a[contains(text(),'Adună')]"));
 		  actions.moveToElement(e).build().perform();//needs testing
-			}
+			}*/
 		}
 		
+		isBot =driver.findElements(By.xpath("//a[contains(text(),'Start')]")).size()>0;
+		
+ 
+		
+		if(isBot) {
+			 ((JavascriptExecutor) driver).executeScript(
+	                    "arguments[0].scrollIntoView(true);", driver.findElement(By.xpath("//a[contains(text(),'Start')]")));
 		bottom =  driver.findElement(By.xpath("//a[contains(text(),'Start')]"));
+		Thread.sleep(700);
 		start  = driver.findElement(By.cssSelector(".reward-corner .ng-binding"));
+		}else {
+			System.out.println("Nothing to do !");
+		}
 	 }
 	 else{
+		 System.out.println("in else last");
 		 bottom =  driver.findElement(By.xpath("//a[contains(text(),'Start')]"));
 		start  = driver.findElement(By.cssSelector(".reward-corner .ng-binding"));
 	 }
-		System.out.println(start.isEnabled()+" start");
+		///System.out.println(start.isEnabled()+" start");
 	
 		
 	
 
 		 System.out.println("ready start");
 		 
-		 while(start.isEnabled()){
+		 while(/*start.isEnabled() &&*/ isBot){
 	
 			 System.out.println("before 1st click");
 		   Thread.sleep(1000);
@@ -139,10 +165,24 @@ public class Depozit {
 			 	  
 					  
 		}
+		
+		//boolean yyu =driver.findElements(By.xpath("//a[contains(text(),'Start')]")).get(0).isEnabled();
+		//sau
+		boolean yyu =driver.findElements(By.xpath("//a[contains(text(),'Start')]")).size() > 0;
+		System.out.println("start found! "+yyu);
+		if(yyu) {
+		boolean stilIs = driver.findElement(By.xpath("//a[contains(text(),'Start')]")).isDisplayed();
+		System.out.println("start displayed! "+stilIs);
+		if(stilIs) {
 		bottom =  driver.findElement(By.xpath("//a[contains(text(),'Start')]"));
 		actions.moveToElement(bottom).build().perform();
 		start =  driver.findElement(By.cssSelector(".reward-corner .ng-binding"));
-		
+		}
+		}else {
+			System.out.println("end of it!");
+			isBot=false;
+			//break;//no need
+		}
 		
 	}
 		

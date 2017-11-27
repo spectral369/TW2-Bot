@@ -18,9 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -29,21 +31,26 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.NumberFormatter;
 
+import org.joda.time.DateTime;
+
+import com.github.lgooddatepicker.components.TimePicker;
+import com.github.lgooddatepicker.components.TimePickerSettings;
+import com.github.lgooddatepicker.components.TimePickerSettings.TimeIncrement;
+
+import tw2.bot.Assests.ArmataPrezenta;
 import tw2.bot.army.Army;
 import tw2.bot.atac.Atac;
 import tw2.bot.depozit.Depozit;
 import tw2.bot.webdr.WebSetup;
-import javax.swing.JSlider;
-import javax.swing.event.ChangeListener;
-import javax.swing.text.NumberFormatter;
-import javax.swing.event.ChangeEvent;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 
 public class UI extends JDialog {
 
@@ -57,6 +64,7 @@ public class UI extends JDialog {
 	private JTextField txtX;
 	private JTextField txtY;
 	JPanel panel_1 = null;
+	JPanel panel_2 = null;
 	JTabbedPane tabbedPane = null;
 	JButton btnAdauga = null;
 	JList<String> comboBox = null;
@@ -250,9 +258,9 @@ public class UI extends JDialog {
 		panel_1.setVisible(false);
 
 		JLabel lblAcestaEsteUn = new JLabel("Acesta este un test....");
-		lblAcestaEsteUn.setBounds(12, 12, 410, 15);
+		lblAcestaEsteUn.setBounds(12, 12, 250, 15);
 		panel_1.add(lblAcestaEsteUn);
-
+		
 		JLabel lblLucrareLaDepozitul = new JLabel("Lucrare la Depozitul de resurse ?");
 		lblLucrareLaDepozitul.setBounds(12, 39, 410, 15);
 		panel_1.add(lblLucrareLaDepozitul);
@@ -404,6 +412,276 @@ public class UI extends JDialog {
 		lblPradaPerAtac.setVisible(false);
 		textField.setVisible(false);
 		btnRemoveAll.setVisible(false);
+		
+		
+		//test new
+		
+		panel_2 =  new JPanel();
+
+		JLabel lblSat =  new JLabel("Introduceti satul");
+		lblSat.setBounds(12, 12, 280, 15);
+		panel_2.add(lblSat);
+		
+		JTextField txtSatX =  new JTextField();
+		txtSatX.setToolTipText("Coordonate X");
+		txtSatX.setBounds(12,39,100,17);
+		txtSatX.setColumns(10);
+		panel_2.add(txtSatX);
+		
+		
+		JTextField txtSatY =  new JTextField();
+		txtSatY.setToolTipText("Coordonate Y");
+		txtSatY.setBounds(120,39,100,17);
+		txtSatY.setColumns(10);
+		panel_2.add(txtSatY);
+		
+		
+		JLabel lblarmata =  new JLabel("Introduceti armata(va da erroare in cazul in care introduceti gresit)");
+		lblarmata.setBounds(24, 12, 300, 15);
+		panel_2.add(lblarmata);
+		
+		JLabel  lblSecuristi  =  new JLabel("Secure");
+		lblSecuristi.setBounds(35, 12, 40, 15);
+		panel_2.add(lblSecuristi);
+		
+		JTextField txtSecure =  new JTextField(8);
+		txtSecure.setBounds(35, 30, 50, 16);
+		txtSecure.setColumns(8);
+		panel_2.add(txtSecure);
+		
+		JLabel  lblCavalerieUsoara  =  new JLabel("Cavalerie Usoara");
+		lblCavalerieUsoara.setBounds(50, 12, 40, 15);
+		panel_2.add(lblCavalerieUsoara);
+		
+		JTextField txtCavalerieUsoara =  new JTextField(8);
+		txtCavalerieUsoara.setBounds(50, 30, 50, 16);
+		txtCavalerieUsoara.setColumns(8);
+		panel_2.add(txtCavalerieUsoara);
+		
+		JLabel  lblArcasCalare =  new JLabel("Arcas Calare");
+		lblArcasCalare.setBounds(70, 12, 40, 15);
+		panel_2.add(lblArcasCalare);
+		
+		JTextField txtArcasCalare =  new JTextField(8);
+		txtArcasCalare.setBounds(70, 30, 50, 16);
+		txtArcasCalare.setColumns(8);
+		panel_2.add(txtArcasCalare);
+		
+		JLabel  lblBerbec =  new JLabel("Berbec");
+		lblBerbec.setBounds(90, 12, 40, 15);
+		panel_2.add(lblBerbec);
+		
+		JTextField txtBerbec =  new JTextField(8);
+		txtBerbec .setBounds(90, 30, 50, 16);
+		txtBerbec .setColumns(8);
+		panel_2.add(txtBerbec);
+		
+		JLabel  lblCatapulta =  new JLabel("Catapulta");
+		lblCatapulta .setBounds(110, 12, 40, 15);
+		panel_2.add(lblCatapulta );
+		
+		JTextField txtCatapulta =  new JTextField(8);
+		txtCatapulta .setBounds(110, 30, 50, 16);
+		txtCatapulta .setColumns(8);
+		panel_2.add(txtCatapulta);
+		
+		
+		JLabel  lblberserk =  new JLabel("Berserk");
+		lblberserk .setBounds(130, 12, 40, 15);
+		panel_2.add(lblberserk );
+		
+		JTextField txtBerserk =  new JTextField(8);
+		txtBerserk .setBounds(130, 30, 50, 16);
+		txtBerserk .setColumns(8);
+		panel_2.add(txtBerserk);
+		
+		JLabel  lblNobil=  new JLabel("Nobil");
+		lblNobil .setBounds(150, 12, 40, 15);
+		panel_2.add(lblNobil);
+		
+		JTextField txtNobil =  new JTextField(8);
+		txtNobil .setBounds(150, 30, 50, 16);
+		txtNobil .setColumns(8);
+		panel_2.add(txtNobil);
+		
+		JLabel  lblPaladin=  new JLabel("Paladin");
+		lblPaladin.setBounds(170, 12, 40, 15);
+		panel_2.add(lblPaladin);
+		
+		JTextField txtPaladin =  new JTextField(8);
+		txtPaladin .setBounds(170, 30, 50, 16);
+		txtPaladin .setColumns(8);
+		panel_2.add(txtPaladin);
+		
+		
+		JLabel  lblData=  new JLabel("Data attk:");
+		lblData.setBounds(200, 12, 40, 15);
+		panel_2.add(lblData);
+		
+		TimePickerSettings sett =  new TimePickerSettings();
+		sett.setInitialTimeToNow();
+		sett.use24HourClockFormat();
+		sett.generatePotentialMenuTimes(TimeIncrement.TenMinutes, null, null);
+		
+		
+		sett.setFormatForDisplayTime("HH:mm:ss");
+		TimePicker tp =  new TimePicker(sett);
+		
+		tp.setBounds(200, 30, 80, 20);
+		panel_2.add(tp);
+		
+		
+		
+		
+		JCheckBox ofiter =  new JCheckBox("Ofiter");
+		ofiter.setBounds(220, 12, 50, 20);
+		panel_2.add(ofiter);
+		
+		JCheckBox medic =  new JCheckBox("Medic");
+		medic.setBounds(220,70,50,20);
+		panel_2.add(medic);
+		
+		JCheckBox All =  new JCheckBox("Toata armata!");
+		All.setBounds(220, 130, 50, 20);
+		All.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			if(All.isSelected()) {
+				txtSecure.setEnabled(false);
+				txtCavalerieUsoara.setEnabled(false);
+				txtArcasCalare.setEnabled(false);
+				txtCatapulta.setEnabled(false);
+				txtBerbec.setEnabled(false);
+				txtBerserk.setEnabled(false);
+				txtNobil.setEnabled(false);
+				txtPaladin.setEnabled(false);
+			}else {
+				txtSecure.setEnabled(true);
+				txtCavalerieUsoara.setEnabled(true);
+				txtArcasCalare.setEnabled(true);
+				txtCatapulta.setEnabled(true);
+				txtBerbec.setEnabled(true);
+				txtBerserk.setEnabled(true);
+				txtNobil.setEnabled(true);
+				txtPaladin.setEnabled(true);
+			}
+				
+			}
+		});
+		panel_2.add(All);
+		
+	
+	JButton Atck =  new JButton("Attack Player");
+	Atck.setBounds(panel_2.getX()-100, panel_2.getY()-70, 50, 20);
+	Atck.addActionListener(new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			boolean ch = false;
+			if (ch == false) {
+				if (txtSatX.getText().isEmpty()) {
+					Component dialog = null;
+					JOptionPane.showMessageDialog(dialog, "Coordonatele x nu sunt setate");
+				} else if (txtSatY.getText().isEmpty()) {
+					Component dialog = null;
+					JOptionPane.showMessageDialog(dialog, "Coordonatele y nu sunt setate");
+				} else if (!txtSatX.getText().matches("[0-9]+") || !txtSatY.getText().matches("[0-9]+")) {
+					Component dialog = null;
+					JOptionPane.showMessageDialog(dialog, "Coordonatele pot fi doar numere.");
+				}
+
+				else
+					ch = true;
+			}
+		if(ch) {
+			websetup = new WebSetup(chckbxTestHeadless.isSelected());
+			
+			Thread one = new Thread() {
+				
+				public void run() {
+					try {
+				btnStartJob.setEnabled(false);
+	        	chckbxAtac.setEnabled(false);
+	        	chckbxLucrareLaDepozit.setEnabled(false);
+	        	btnAdauga.setEnabled(false);
+	        	btnRemoveAll.setEnabled(false);
+	        	panel_2.setEnabled(false);
+	        	
+					login = new Login(websetup.getChromeWebDriver(), txtUsername.getText().toString(),
+							String.valueOf(passwordField.getPassword()),cmodel.getSelectedItem().toString());
+					Army arm =  new Army();
+					ArmataPrezenta attkArmy =  new ArmataPrezenta();
+					if(!txtSecure.getText().isEmpty() && Integer.parseInt(txtSecure.getText())>0)
+					attkArmy.setLuptatorCuSecure(Integer.parseInt(txtSecure.getText()));
+					if(!txtCavalerieUsoara.getText().isEmpty() && Integer.parseInt(txtCavalerieUsoara.getText())>0)
+					attkArmy.setCavalerieUsoara(Integer.parseInt(txtCavalerieUsoara.getText()));
+					if(!txtArcasCalare.getText().isEmpty() && Integer.parseInt(txtArcasCalare.getText())>0)
+					attkArmy.setArcasCalare(Integer.parseInt(txtArcasCalare.getText()));
+					if(!txtCatapulta.getText().isEmpty() && Integer.parseInt(txtCatapulta.getText())>0)
+					attkArmy.setCatapulta(Integer.parseInt(txtCatapulta.getText()));
+					if(!txtBerbec.getText().isEmpty() && Integer.parseInt(txtBerbec.getText())>0)
+					attkArmy.setBerbec(Integer.parseInt(txtBerbec.getText()));
+					if(!txtBerserk.getText().isEmpty() && Integer.parseInt(txtBerserk.getText())>0)
+					attkArmy.setBerserk(Integer.parseInt(txtBerserk.getText()));
+					if(!txtNobil.getText().isEmpty() && Integer.parseInt(txtNobil.getText())>0)
+					attkArmy.setNobil(Integer.parseInt(txtNobil.getText()));
+					if(!txtPaladin.getText().isEmpty() && Integer.parseInt(txtPaladin.getText())>0)
+					attkArmy.setPaladin(Integer.parseInt(txtPaladin.getText()));
+					arm.armyInfo(websetup.getChromeWebDriver(),websetup.getWait());
+					if(!(arm.getArmy()==null)){
+						atac =  new Atac();
+						List<String> ar= new ArrayList<String>();
+								ar.add(txtSatX.getText()+":"+txtSatY.getText());
+								int [] da =  Utils.splitDestinationTime(tp.getText());
+						DateTime dt = DateTime.now();
+						
+						dt = dt.withHourOfDay(da[0]);
+						dt = dt.withMinuteOfHour(da[1]);
+						dt = dt.withSecondOfMinute(da[2]);
+						
+						try {
+							
+							atac.atacPlayer(websetup.getChromeWebDriver(),arm.getArmy(), ar, websetup.getWait(),
+									websetup.getAWTRobot(), All.isSelected(), ofiter.isSelected(),medic.isSelected(), attkArmy,dt);
+							
+							
+						} catch (NumberFormatException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+					System.out.println("Job Done !(now feel bad using this bot)");
+					btnStartJob.setEnabled(true);
+		        	chckbxAtac.setEnabled(true);
+		        	chckbxLucrareLaDepozit.setEnabled(true);
+		        	btnAdauga.setEnabled(true);
+		        	btnRemoveAll.setEnabled(true);
+		        	panel_2.setEnabled(true);
+					try {
+						websetup.quitWithDelay();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			};
+		
+		one.start();
+	
+		}
+			
+		}
+	});
+	panel_2.add(Atck);
+		//test new 
 	}
 
 	private void AttackCheck(ActionEvent e) {
@@ -483,6 +761,7 @@ public class UI extends JDialog {
 			tabbedPane.addTab("Bot", null, panel_1, null);
 			tabbedPane.setSelectedIndex(1);
 			tabbedPane.removeTabAt(0);
+			tabbedPane.addTab("PlayerAttack", null, panel_2, null);
 		}
 
 	}

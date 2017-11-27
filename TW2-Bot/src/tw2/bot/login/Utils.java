@@ -32,5 +32,23 @@ return log;
 	    }
 	    return true;
 	}
+	
+	
+public static int[] splitDestinationTime(String element){
+		
+		String[]tokens = element.split("\\s+|[,:-]");
+		
+			
+		//tokens[0] = tokens[0].substring(0, tokens[0].length());
+		int[] tpm = new int[3];
+		  tpm[0] =  Integer.parseInt(tokens[0]);
+		  tpm[1] =  Integer.parseInt(tokens[1]);
+		  tpm[2] = Integer.parseInt(tokens[2]);
+		  return tpm;
+		  
+		
+	}
 
 }
+
+

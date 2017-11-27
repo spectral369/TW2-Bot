@@ -8,6 +8,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -21,6 +22,40 @@ public class Atac {
 Greedy imp = null;
 ArmataPrezenta original= null;
 Army narmy = null;
+
+public void atacPlayer(WebDriver driver, ArmataPrezenta army,List<String>sat,
+		WebDriverWait wait,Robot rob,boolean maxAll,boolean ofiter,boolean medic,ArmataPrezenta arm,DateTime dt) {
+	this.original =  new ArmataPrezenta(army);
+	List<ArmataPrezenta> prada =  new ArrayList<>();
+	if(maxAll) {
+		ArmataPrezenta all =  this.original;
+		all.setLancier(0);
+		all.setArcas(0);
+		all.setSpadasin(0);
+		all.setTrabuchet(0);
+		
+	prada.add(all);
+	}
+	else
+		prada.add(arm);
+	
+	Raid pr =  new Raid(driver, army, sat, wait, 0, 0, rob, prada, 0,ofiter,medic,dt);
+	pr.start();
+	try {
+		pr.join();
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	
+	
+}
+
+
+
+
+
 	public void atac(WebDriver driver,ArmataPrezenta army, List<String> sate,
 			WebDriverWait wait,int cicluri,int cantitatePradaPerAtac,Robot rob) throws InterruptedException{
 		this.original =  new ArmataPrezenta(army);
@@ -28,7 +63,7 @@ List<Raid> th2 =  new ArrayList<>();
 List<ArmataPrezenta> prada= testImpartireArmata(army,cantitatePradaPerAtac);
 for(int j = 0;j<cicluri;j++)
 		for(int i=0;i<sate.size();i++){
-			th2.add(new Raid(driver, original, sate, wait, cicluri, cantitatePradaPerAtac, rob, prada, i));
+			th2.add(new Raid(driver, original, sate, wait, cicluri, cantitatePradaPerAtac, rob, prada, i,false,false,null));
 			
 		}
 
@@ -108,8 +143,12 @@ service2.shutdownNow();
 		 long mii= 0;
 		 List<ArmataPrezenta> prada = null;
 		 int i;
+		 boolean ofiter = false;
+		 boolean medic =  false;
+		 DateTime dt = null;
 	    public Raid(WebDriver driver,ArmataPrezenta army, List<String> sate,WebDriverWait wait,
-	    		int cicluri,int cantitatePradaPerAtac,Robot rob,List<ArmataPrezenta> prada,int i) 
+	    		int cicluri,int cantitatePradaPerAtac,Robot rob,List<ArmataPrezenta> prada,int i,
+	    		boolean ofiter,boolean medic,DateTime dt) 
 	        {
 	            this.driver = driver;
 	            this.army=army;
@@ -120,6 +159,9 @@ service2.shutdownNow();
 	            this.rob=rob;
 	            this.prada = prada;
 	            this.i = i;
+	            this.ofiter=ofiter;
+	            this.medic=medic;
+	            this.dt=dt;
 	          
 	        }
 	    @Override
@@ -167,6 +209,11 @@ service2.shutdownNow();
 			}
 	    	// loc = driver.findElement(By.xpath("//li[2]/div/div[2]/div/div/a[2]/span[2]"));
 	    	// loc.click();
+	    	 
+	    	 
+	    	 
+	    	 
+	    	 
 	    	 
 	    	 /*test grija*/
 	    	 int h = 1;
@@ -259,12 +306,67 @@ service2.shutdownNow();
 	    	 String time =null;
 	    	 for(WebElement s :timp){
 	    	
-	    		 System.out.print("Item: "+s);
+	    	//	 System.out.print("Item: "+s);
 	    	 if(s.getAttribute("innerHTML").startsWith("~")||s.getAttribute("innerHTML").contains("~") ||s.getAttribute("innerHTML").matches("~|~")){
 	    		 time = new String(s.getAttribute("innerHTML").substring(s.getAttribute("innerHTML").lastIndexOf("~")+1,s.getAttribute("innerHTML").length() ));
 	    		 	 
 	    	 }
 	    	 }
+	    	 
+	    	 ///add ofiter and medic.
+	    	 if(cantitatePradaPerAtac==0 && prada.size()==1) {
+	    		 System.out.println("inside player attack");
+	    		 
+	    		  List<WebElement> reachTime =  driver.findElements(By.cssSelector("div.text-center.new.full-width.ng-binding"));
+	    		
+	    			 System.out.println(reachTime.get(0).getText());
+	    			 int[]  asda= splitDestinationTime(reachTime.get(0).getText());
+	    			 System.out.println("Ore: "+asda[0]);
+	    			 System.out.println("Minute: "+asda[1]);
+	    			 System.out.println("Secunde: "+asda[2]);
+	    	
+	    			 
+	    				DateTime dt1 = DateTime.now();
+	    			
+	    				DateTime dt2 = dt;
+	    				if(asda[0]!=0)
+	    				dt2 =  dt2.minusHours(asda[0]);
+	    				dt2 =  dt2.minusMinutes(asda[1]);
+	    				dt2 =  dt2.minusSeconds(asda[2]);
+	    				
+	    				Period p = new Period(dt1, dt2);
+	    				if(p.getMinutes()<0) {
+	    					dt2 = dt2.plusDays(1);
+	    					p =  new Period(dt1,dt2);
+	    				}
+	    			
+	    				System.out.println("HOURS: " + p.getHours());
+	    				System.out.println("MINUTES: " + p.getMinutes());
+	    				System.out.println("SECONDS: " + p.getSeconds());
+	    				rob.mouseWheel(200);
+	    		 List<WebElement> boots =  driver.findElements(By.cssSelector("div.switch.switch-34x66.switch-vertical"));
+	    		 if(ofiter)
+	    			 boots.get(0).click();
+	    		 if(medic)
+	    			 boots.get(2).click();
+	    		 
+	    	System.out.println("Hours to millis: "+TimeUnit.HOURS.toMillis(p.getHours()));
+	    	System.out.println("Minutes to millis: "+TimeUnit.HOURS.toMillis(p.getMinutes()));
+	    	System.out.println("Seconds to millis: "+TimeUnit.HOURS.toMillis(p.getSeconds()));
+	    	try {
+	    		if(p.getHours()!=0)
+				Thread.sleep(TimeUnit.HOURS.toMillis(p.getHours()));
+				Thread.sleep(TimeUnit.MINUTES.toMillis(p.getMinutes()));
+				Thread.sleep(TimeUnit.SECONDS.toMillis(p.getSeconds()));
+				
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+	    		 
+	    	 }
+	    	 
 	    	
 	    	 /*if(loc.isEnabled())
 	    		 loc.click();*/
