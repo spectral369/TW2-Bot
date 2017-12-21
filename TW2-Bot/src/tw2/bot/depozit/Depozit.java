@@ -11,6 +11,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -92,9 +93,11 @@ ex.executeScript("arguments[0].click();", elem);
  
 		
 		if(isBot) {
-			 ((JavascriptExecutor) driver).executeScript(
-	                    "arguments[0].scrollIntoView(true);", driver.findElement(By.xpath("//a[contains(text(),'Start')]")));
+			System.out.println("scroll into view ");
+			/* ((JavascriptExecutor) driver).executeScript(
+	                    "arguments[0].scrollIntoView(true);", driver.findElement(By.xpath("//a[contains(text(),'Start')]")));*/
 		bottom =  driver.findElement(By.xpath("//a[contains(text(),'Start')]"));
+		actions.moveToElement(bottom).build().perform();
 		Thread.sleep(700);
 		start  = driver.findElement(By.cssSelector(".reward-corner .ng-binding"));
 		}else {
@@ -118,15 +121,16 @@ ex.executeScript("arguments[0].click();", elem);
 			 System.out.println("before 1st click");
 		   Thread.sleep(1000);
 		   System.out.println("afer scrollto");
-			 actions.moveToElement(bottom).build().perform();
+		actions.moveToElement(bottom).perform();
 			// start.click();
-			((JavascriptExecutor) driver).executeScript("arguments[0].click()",start);
+			((JavascriptExecutor) driver).executeScript("arguments[0].click()",bottom);
 			 System.out.println("after 1st click");
 	
 		 Thread.sleep(2300);
 	
 		    
-		 WebElement spans2 = driver.findElement(By.cssSelector("div[class=progress-text] span[class=ng-binding]"));//sterge >
+		// WebElement spans2 = driver.findElement(By.cssSelector("div[class=progress-text] span[class=ng-binding]"));//sterge >
+		 WebElement spans2 =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class=progress-text] span[class=ng-binding]")));
 		// WebElement spans2 = driver.findElement(By.cssSelector(".progress-wrapper span.ng-binding"));
 		 String waitString = null;
 		 int waitNumber = 0;
@@ -157,11 +161,13 @@ ex.executeScript("arguments[0].click();", elem);
 			  WebElement elem3 = driver.findElement(By.xpath("//a[contains(text(),'Adună')]"));
 			  actions.moveToElement(elem3).build().perform();
 			  Thread.sleep(500);
-			  try{
-				  elem3.click();
+			  ((JavascriptExecutor) driver).executeScript("arguments[0].click()",elem3);
+			/*  try{
+				//  elem3.click();
+				  actions.click(elem3).click();
 			  }finally{
 				  ((JavascriptExecutor) driver).executeScript("arguments[0].click()",elem3);
-			  }
+			  }*/
 			 	  
 					  
 		}
@@ -171,11 +177,14 @@ ex.executeScript("arguments[0].click();", elem);
 		boolean yyu =driver.findElements(By.xpath("//a[contains(text(),'Start')]")).size() > 0;
 		System.out.println("start found! "+yyu);
 		if(yyu) {
-		boolean stilIs = driver.findElement(By.xpath("//a[contains(text(),'Start')]")).isDisplayed();
+		boolean stilIs = driver.findElement(By.xpath("//a[contains(text(),'Start')]")).isEnabled();
 		System.out.println("start displayed! "+stilIs);
 		if(stilIs) {
 		bottom =  driver.findElement(By.xpath("//a[contains(text(),'Start')]"));
 		actions.moveToElement(bottom).build().perform();
+		Thread.sleep(400);
+		 ((JavascriptExecutor) driver).executeScript("arguments[0].click()",bottom);
+		 Thread.sleep(400);
 		start =  driver.findElement(By.cssSelector(".reward-corner .ng-binding"));
 		}
 		}else {
