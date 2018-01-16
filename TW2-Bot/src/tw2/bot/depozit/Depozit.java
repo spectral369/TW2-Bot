@@ -11,7 +11,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -72,7 +71,9 @@ ex.executeScript("arguments[0].click();", elem);
 	 
 		Actions actions = new Actions(driver);
 	 WebElement  bottom= null;
-	 WebElement start = null;
+	 
+	 @SuppressWarnings("unused")
+	WebElement start = null;
 	 if(dr.toUpperCase().contains("CHRO"))
 	 {
 		boolean adu = driver.findElements(By.xpath("//a[contains(text(),'Adună')]")).size()>0;
@@ -121,7 +122,7 @@ ex.executeScript("arguments[0].click();", elem);
 			 System.out.println("before 1st click");
 		   Thread.sleep(1000);
 		   System.out.println("afer scrollto");
-		actions.moveToElement(bottom).perform();
+		  actions.moveToElement(bottom).build().perform();
 			// start.click();
 			((JavascriptExecutor) driver).executeScript("arguments[0].click()",bottom);
 			 System.out.println("after 1st click");
@@ -183,9 +184,13 @@ ex.executeScript("arguments[0].click();", elem);
 		bottom =  driver.findElement(By.xpath("//a[contains(text(),'Start')]"));
 		actions.moveToElement(bottom).build().perform();
 		Thread.sleep(400);
-		 ((JavascriptExecutor) driver).executeScript("arguments[0].click()",bottom);
+		 ///((JavascriptExecutor) driver).executeScript("arguments[0].click()",bottom);
 		 Thread.sleep(400);
-		start =  driver.findElement(By.cssSelector(".reward-corner .ng-binding"));
+		
+		bottom=null;
+		bottom =  driver.findElement(By.xpath("//a[contains(text(),'Start')]"));
+		System.out.println(bottom.toString());
+		//start =  driver.findElement(By.cssSelector(".reward-corner .ng-binding"));
 		}
 		}else {
 			System.out.println("end of it!");
