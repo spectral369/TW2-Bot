@@ -58,9 +58,12 @@ public void atacPlayer(WebDriver driver, ArmataPrezenta army,List<String>sat,
 
 	public void atac(WebDriver driver,ArmataPrezenta army, List<String> sate,
 			WebDriverWait wait,int cicluri,int cantitatePradaPerAtac,Robot rob) throws InterruptedException{
+		Thread.sleep(6000);
 		this.original =  new ArmataPrezenta(army);
+	
 List<Raid> th2 =  new ArrayList<>();
 List<ArmataPrezenta> prada= testImpartireArmata(army,cantitatePradaPerAtac);
+
 for(int j = 0;j<cicluri;j++)
 		for(int i=0;i<sate.size();i++){
 			th2.add(new Raid(driver, original, sate, wait, cicluri, cantitatePradaPerAtac, rob, prada, i,false,false,null));
@@ -87,8 +90,9 @@ while(service2.getActiveCount()>0) {
 		e.printStackTrace();
 	}
 }
+System.out.println("shutting down in 10 seconds....");
 service2.shutdown();
-service2.awaitTermination(30, TimeUnit.SECONDS);
+service2.awaitTermination(10, TimeUnit.SECONDS);
 service2.shutdownNow();
 //service2.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
 

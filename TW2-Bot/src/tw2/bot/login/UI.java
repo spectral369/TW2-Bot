@@ -25,6 +25,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -63,6 +64,8 @@ public class UI extends JDialog {
 	private JPasswordField passwordField;
 	private JTextField txtX;
 	private JTextField txtY;
+	private JButton addWorld;
+	
 	JPanel panel_1 = null;
 	JPanel panel_2 = null;
 	JTabbedPane tabbedPane = null;
@@ -82,11 +85,14 @@ public class UI extends JDialog {
 	Atac atac =  null;
 	private JTextField textField;
 	JSlider slider = null;
-	private int cicluri= 1;
+	JSlider reincarcare = null;
+	private int cicluri = 1;
+	private int reincarcariDepozit = 0;
 	JLabel lblNumarCicluriAtac = null;
 	JButton btnStartJob = null;
 	private JTextField textField_1;
 	JLabel lblPradaPerAtac =null;
+	private JLabel reNum = null;
 	JComboBox<String> comboBox_1 = null;
 	DefaultComboBoxModel<String> cmodel = null;
 	JCheckBox chckbxTestHeadless = null;
@@ -232,6 +238,35 @@ public class UI extends JDialog {
 		cmodel =  new DefaultComboBoxModel<>();
 		cmodel.addElement("Prima Disponibila");
 		cmodel.addElement("Orava");
+		addWorld =  new JButton("Adauga Lume!");
+		addWorld.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				/*JFrame fr =  new JFrame("Adauga");
+				fr.setLayout(new BoxLayout(fr.getContentPane(), BoxLayout.Y_AXIS));
+				JLabel frLabel =  new JLabel("Adauga numele lumii: ");
+				JTextField frTextField =  new JTextField(12);
+				fr.add(frLabel);
+				//fr.add(frTextField);
+*/				String s = (String)JOptionPane.showInputDialog(
+	                    new JFrame(),
+	                    "Adauga Lume\n"
+	                    + "\"Exact cum e scris pe site\"",
+	                    "Add World",
+	                    JOptionPane.PLAIN_MESSAGE,
+	                    null,
+	                    null,
+	                    null);
+				if(s!="" || !s.isEmpty()||s!=null) {
+					cmodel.addElement(s);
+				}
+			}
+		});
+		
+	addWorld.setBounds(285, 173, 150, 24);
+	 panel.add(addWorld);
+		
 		comboBox_1.setModel(cmodel);
 		comboBox_1.setSelectedIndex(0);
 		comboBox_1.setEditable(false);
@@ -266,25 +301,48 @@ public class UI extends JDialog {
 		panel_1.add(lblLucrareLaDepozitul);
 
 		chckbxLucrareLaDepozit = new JCheckBox("Lucrare la Depozitul de Resurse ?");
+		reincarcare = new JSlider();
+		reNum =  new JLabel("");
+		reNum.setBounds(375, 62, 15, 16);
+		reincarcare.setValue(0);
+		reincarcare.setToolTipText("Numar Reincarcari");
+		reincarcare.setMaximum(10);
+		reincarcare.setMinimum(0);
+		reincarcare.setBounds(295, 62, 80, 16);
+		reincarcare.setVisible(false);
+		reincarcare.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				numarReincarcariDepozit(e);
+			}
+
+		
+		});
 		chckbxLucrareLaDepozit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// TO DO:
 				if (chckbxLucrareLaDepozit.isSelected()){
 					isDepositChecked = true;
+					reincarcare.setVisible(true);
 					btnStartJob.setEnabled(true);
 				}
 				else{
 					isDepositChecked = false;
+					reincarcare.setVisible(false);
 					btnStartJob.setEnabled(false);
 				}
 			}
 
 		});
-		chckbxLucrareLaDepozit.setBounds(12, 62, 410, 23);
+		chckbxLucrareLaDepozit.setBounds(12, 62, 280, 23);
+	
+		
 		panel_1.add(chckbxLucrareLaDepozit);
+		panel_1.add(reincarcare);
+		panel_1.add(reNum);
 		//test pentru headless
-		if(chckbxTestHeadless.isSelected())
+		if(chckbxTestHeadless.isSelected()) 
 			chckbxLucrareLaDepozit.setEnabled(false);
+		
 
 		JLabel lblDupaTerminareaLucrarii = new JLabel("Dupa terminarea lucrarii la depozit. facem atac ?");
 		lblDupaTerminareaLucrarii.setBounds(12, 94, 410, 15);
@@ -609,7 +667,7 @@ public class UI extends JDialog {
 	        	btnRemoveAll.setEnabled(false);
 	        	panel_2.setEnabled(false);
 	        	
-					login = new Login(websetup.getChromeWebDriver(), txtUsername.getText().toString(),
+					login = new Login(websetup.getChromeWebDriver(),websetup.getWait(), txtUsername.getText().toString(),
 							String.valueOf(passwordField.getPassword()),cmodel.getSelectedItem().toString());
 					Army arm =  new Army();
 					ArmataPrezenta attkArmy =  new ArmataPrezenta();
@@ -778,19 +836,24 @@ public class UI extends JDialog {
 		        	chckbxLucrareLaDepozit.setEnabled(false);
 		        	btnAdauga.setEnabled(false);
 		        	btnRemoveAll.setEnabled(false);
-		        	login = new Login(websetup.getChromeWebDriver(), txtUsername.getText().toString(),
+		        	login = new Login(websetup.getChromeWebDriver(),websetup.getWait(), txtUsername.getText().toString(),
 		    				String.valueOf(passwordField.getPassword()),cmodel.getSelectedItem().toString());
 
 		    		if (isDepositChecked)
-		    			depozit = new Depozit(websetup.getChromeWebDriver(), websetup.getWait(),websetup.getAWTRobot());
+		    			depozit = new Depozit(websetup.getChromeWebDriver(), websetup.getWait(),websetup.getAWTRobot(),reincarcariDepozit);
 		    		if(chckbxAtac.isSelected()){
+		    			
 		    			army =  new Army();
+		    			
 		    			army.armyInfo(websetup.getChromeWebDriver(),websetup.getWait());
+		    			
 		    			if(!(army.getArmy()==null)){
 		    				atac =  new Atac();
+		    				
 		    				List<String> ar= new ArrayList<String>();
 		    				for(int i =0;i<modelList.getSize();i++)
 		    					ar.add(modelList.getElementAt(i));
+		    			
 		    				atac.atac(websetup.getChromeWebDriver(), army.getArmy(), ar,websetup.getWait(),cicluri,
 		    						Integer.parseInt(textField_1.getText()),websetup.getAWTRobot());
 		    			}
@@ -828,6 +891,13 @@ public class UI extends JDialog {
 		if(slider.getValueIsAdjusting()){
 			textField.setText(String.valueOf(slider.getValue()));
 			cicluri = slider.getValue();
+		}
+	}
+	
+	private void numarReincarcariDepozit(ChangeEvent e) {
+		if(reincarcare.getValueIsAdjusting()){
+			reNum.setText(String.valueOf(reincarcare.getValue()));
+			reincarcariDepozit = slider.getValue();
 		}
 	}
 }

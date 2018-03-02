@@ -190,7 +190,7 @@ public class WebSetup {
 			options.addArguments("enable-automation");
 			options.addArguments("--disable-infobars");
 			options.addArguments("--mute-audio");
-			//options.addArguments("window-size=1600x1024");
+			options.addArguments("window-size=1600x1024");//hidden by default
 			options.addArguments("headless");
 			/*Map<String, Object> chromeOptions = new HashMap<String, Object>();
 			chromeOptions.put("binary", "/usr/lib/chromium-browser/chromium-browser");
